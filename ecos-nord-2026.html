@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ECOS Nord 2026 · Convocatoria México–Francia</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --azul: #002395;
+    --rojo: #ED2939;
+    --crema: #FDF8F2;
+    --carbon: #1A1A2E;
+    --gris: #6B7280;
+    --gris-claro: #F3F4F6;
+    --verde: #059669;
+    --borde: #E5E7EB;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--crema); color: var(--carbon); min-height: 100vh; }
+
+  header { background: var(--azul); color: white; position: relative; overflow: hidden; }
+  header::before { content: ''; position: absolute; top: -60px; right: -60px; width: 300px; height: 300px; background: var(--rojo); border-radius: 50%; opacity: 0.15; }
+  header::after { content: 'ECOS'; position: absolute; bottom: -20px; left: -10px; font-family: 'Playfair Display', serif; font-size: 140px; font-weight: 900; color: white; opacity: 0.04; letter-spacing: -5px; pointer-events: none; }
+  .header-inner { max-width: 860px; margin: 0 auto; padding: 40px 24px 36px; position: relative; z-index: 1; }
+  .flag-strip { display: flex; gap: 6px; margin-bottom: 20px; align-items: center; }
+  .flag-strip span { font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.8; }
+  .flag-mx, .flag-fr { width: 28px; height: 18px; border-radius: 2px; display: inline-block; }
+  .flag-mx { background: linear-gradient(to right, #006847 33%, white 33%, white 66%, #CE1126 66%); }
+  .flag-fr { background: linear-gradient(to right, #002395 33%, white 33%, white 66%, #ED2939 66%); }
+  h1 { font-family: 'Playfair Display', serif; font-size: clamp(28px, 5vw, 48px); font-weight: 900; line-height: 1.1; margin-bottom: 10px; }
+  h1 em { color: #93C5FD; font-style: normal; }
+  .header-sub { font-size: 15px; opacity: 0.75; max-width: 520px; line-height: 1.6; margin-bottom: 28px; }
+  .badges { display: flex; flex-wrap: wrap; gap: 10px; }
+  .badge { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; padding: 5px 14px; font-size: 12.5px; font-weight: 500; }
+  .badge.urgente { background: var(--rojo); border-color: var(--rojo); }
+
+  nav.tabs { background: white; border-bottom: 1px solid var(--borde); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .tabs-inner { max-width: 860px; margin: 0 auto; display: flex; overflow-x: auto; scrollbar-width: none; }
+  .tab-btn { padding: 14px 20px; border: none; background: transparent; font-family: 'DM Sans', sans-serif; font-size: 13.5px; font-weight: 500; color: var(--gris); cursor: pointer; white-space: nowrap; border-bottom: 2.5px solid transparent; transition: all 0.2s; }
+  .tab-btn:hover { color: var(--azul); }
+  .tab-btn.active { color: var(--azul); border-bottom-color: var(--azul); font-weight: 600; }
+
+  main { max-width: 860px; margin: 0 auto; padding: 32px 24px 60px; }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .card { background: white; border-radius: 12px; border: 1px solid var(--borde); padding: 24px; margin-bottom: 16px; }
+  .card-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+  .card-title .icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; background: var(--gris-claro); flex-shrink: 0; }
+
+  .overview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 24px; }
+  .stat-card { background: white; border: 1px solid var(--borde); border-radius: 10px; padding: 18px; text-align: center; }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 900; color: var(--azul); line-height: 1; margin-bottom: 4px; }
+  .stat-label { font-size: 12px; color: var(--gris); line-height: 1.4; }
+
+  .timeline { display: flex; flex-direction: column; }
+  .tl-item { display: flex; gap: 16px; position: relative; }
+  .tl-item:not(:last-child)::after { content: ''; position: absolute; left: 16px; top: 34px; bottom: -10px; width: 2px; background: var(--borde); }
+  .tl-dot { width: 34px; height: 34px; border-radius: 50%; background: var(--gris-claro); border: 2px solid var(--borde); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; margin-top: 2px; }
+  .tl-dot.done { background: var(--verde); border-color: var(--verde); }
+  .tl-dot.active-step { background: var(--azul); border-color: var(--azul); }
+  .tl-content { padding-bottom: 22px; }
+  .tl-label { font-weight: 600; font-size: 14px; }
+  .tl-desc { font-size: 13px; color: var(--gris); margin-top: 2px; }
+
+  .agenda-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 600px) { .agenda-grid { grid-template-columns: 1fr; } }
+  .agenda-card { border: 1.5px solid var(--borde); border-radius: 10px; padding: 16px; cursor: pointer; transition: all 0.2s; background: white; position: relative; overflow: hidden; }
+  .agenda-card:hover { border-color: var(--azul); box-shadow: 0 0 0 3px rgba(0,35,149,0.06); }
+  .agenda-card.selected { border-color: var(--azul); background: #EFF6FF; }
+  .agenda-card.selected::after { content: '✓'; position: absolute; top: 10px; right: 12px; width: 22px; height: 22px; background: var(--azul); color: white; border-radius: 50%; font-size: 11px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+  .agenda-num { font-size: 11px; font-weight: 700; letter-spacing: 1px; color: var(--gris); margin-bottom: 5px; text-transform: uppercase; }
+  .agenda-title { font-weight: 600; font-size: 14px; line-height: 1.4; }
+  .agenda-emoji { font-size: 22px; margin-bottom: 6px; display: block; }
+
+  .selection-result { background: #EFF6FF; border: 1.5px solid var(--azul); border-radius: 10px; padding: 18px; margin-top: 20px; display: none; }
+  .selection-result.visible { display: block; }
+  .selection-result h3 { font-size: 14px; font-weight: 600; color: var(--azul); margin-bottom: 8px; }
+  .selection-result p { font-size: 13.5px; line-height: 1.6; }
+
+  .tips-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  @media (max-width: 600px) { .tips-grid { grid-template-columns: 1fr; } }
+  .tip-card { background: white; border: 1px solid var(--borde); border-radius: 10px; padding: 16px; }
+  .tip-card h4 { font-size: 13.5px; font-weight: 600; margin-bottom: 6px; }
+  .tip-card p { font-size: 12.5px; color: var(--gris); line-height: 1.6; }
+  .tip-card a { color: var(--azul); text-decoration: none; font-weight: 500; }
+  .tip-card a:hover { text-decoration: underline; }
+
+  .req-list { list-style: none; }
+  .req-list li { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--borde); font-size: 14px; align-items: flex-start; line-height: 1.5; }
+  .req-list li:last-child { border-bottom: none; }
+  .req-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+  .alert { border-radius: 8px; padding: 14px 16px; font-size: 13.5px; line-height: 1.6; margin-bottom: 14px; display: flex; gap: 10px; align-items: flex-start; }
+  .alert-warn { background: #FFFBEB; border: 1px solid #FDE68A; color: #92400E; }
+  .alert-info { background: #EFF6FF; border: 1px solid #BFDBFE; color: #1E40AF; }
+  .alert-danger { background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; }
+
+  .link-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--azul); color: white; text-decoration: none; border-radius: 7px; padding: 9px 16px; font-size: 13px; font-weight: 600; transition: all 0.2s; }
+  .link-btn:hover { background: #001A7A; transform: translateY(-1px); }
+  .link-btn.outline { background: white; color: var(--azul); border: 1.5px solid var(--azul); }
+  .link-btn.outline:hover { background: #EFF6FF; transform: translateY(-1px); }
+
+  .section-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+  .section-desc { font-size: 14px; color: var(--gris); margin-bottom: 22px; line-height: 1.6; }
+  .divider { height: 1px; background: var(--borde); margin: 20px 0; }
+
+  footer { background: var(--carbon); color: rgba(255,255,255,0.7); text-align: center; padding: 18px 24px; font-size: 12.5px; }
+  footer a { color: #93C5FD; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="flag-strip">
+      <span class="flag-mx"></span><span>México</span>
+      <span style="opacity:0.4">×</span>
+      <span class="flag-fr"></span><span>Francia</span>
+    </div>
+    <h1>Convocatoria <em>ECOS Nord</em> 2026</h1>
+    <p class="header-sub">Financiamiento binacional para proyectos de investigación México–Francia. Movilidad académica, co-tutelas de doctorado y colaboración científica de alto impacto.</p>
+    <div class="badges">
+      <span class="badge">Secihti + ECOS Nord</span>
+      <span class="badge">4 etapas anuales</span>
+      <span class="badge">Misiones y estancias</span>
+      <span class="badge urgente">⚡ Convocatoria abierta</span>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="tabs-inner">
+    <button class="tab-btn active" onclick="showTab('overview', this)">📋 Resumen</button>
+    <button class="tab-btn" onclick="showTab('agendas', this)">🎯 Agendas prioritarias</button>
+    <button class="tab-btn" onclick="showTab('colaborador', this)">🤝 Buscar colaborador</button>
+    <button class="tab-btn" onclick="showTab('requisitos', this)">📄 Requisitos y envío</button>
+  </div>
+</nav>
+
+<main>
+
+  <!-- RESUMEN -->
+  <div id="tab-overview" class="section active">
+    <h2 class="section-title">¿Qué ofrece esta convocatoria?</h2>
+    <p class="section-desc">ECOS Nord financia proyectos binacionales México–Francia de 4 años. Cubre la movilidad de investigadores y doctorandos entre ambos países.</p>
+
+    <div class="overview-grid">
+      <div class="stat-card">
+        <div class="stat-num">4</div>
+        <div class="stat-label">etapas anuales<br>(11 meses c/u)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">1</div>
+        <div class="stat-label">misión/estancia<br>por año por país</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">15</div>
+        <div class="stat-label">días máx. por misión<br>(investigadores)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">45</div>
+        <div class="stat-label">días máx. por estancia<br>(doctorandos)</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><div class="icon">💰</div>¿Qué financia México? (Secihti)</div>
+      <ul class="req-list">
+        <li><span class="req-icon">✈️</span><div><strong>Pasajes aéreos internacionales</strong> (tarifa económica) para misiones a Francia. Deben vincularse a los objetivos del proyecto.</div></li>
+        <li><span class="req-icon">🚌</span><div><strong>Pasajes terrestres</strong> para trabajo de campo, congresos y eventos académicos.</div></li>
+        <li><span class="req-icon">🏨</span><div><strong>Viáticos</strong> (alimentación y hospedaje) para estancias en Francia. Deben estar justificados y comprobados.</div></li>
+        <li><span class="req-icon">🔍</span><div><strong>Servicios de auditoría</strong> al cierre del proyecto (hasta 1.5% del monto total, solo última etapa).</div></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><div class="icon">🇫🇷</div>¿Qué financia Francia? (ECOS Nord)</div>
+      <ul class="req-list">
+        <li><span class="req-icon">✈️</span><div><strong>Pasajes</strong> hasta €1,300 por investigador/a y por doctorando/a francés/a para viajar a México (ida y vuelta), por año.</div></li>
+        <li><span class="req-icon">🏨</span><div><strong>Viáticos investigadores/as</strong> hasta €90/día, máximo 15 días/año en México.</div></li>
+        <li><span class="req-icon">👨‍🎓</span><div><strong>Viáticos doctorandos/as</strong> hasta €65/día, entre 30 y 45 días/año en México.</div></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><div class="icon">📅</div>Proceso y etapas clave</div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot done">📢</div>
+          <div class="tl-content">
+            <div class="tl-label">TDR publicados</div>
+            <div class="tl-desc">10 de abril de 2026 — Secihti publicó los Términos de Referencia.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot active-step">📝</div>
+          <div class="tl-content">
+            <div class="tl-label">Registro de propuestas (activo)</div>
+            <div class="tl-desc">Vía SALSA Proyectos (MX) y MoveOn (FR). Verifica la fecha de cierre en la convocatoria oficial.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot">🔎</div>
+          <div class="tl-content">
+            <div class="tl-label">Evaluación binacional</div>
+            <div class="tl-desc">Comisión mixta México–Francia evalúa mérito científico y relevancia bilateral.</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot">✅</div>
+          <div class="tl-content">
+            <div class="tl-label">Publicación de resultados</div>
+            <div class="tl-desc">Secihti en secihti.mx/convocatorias · ECOS Nord en univ-spn.fr/ecos-nord</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot">📋</div>
+          <div class="tl-content">
+            <div class="tl-label">Firma del CAR</div>
+            <div class="tl-desc">20 días hábiles tras notificación. Firma digital en SALSA Proyectos.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="alert alert-warn">
+      <span>⚠️</span>
+      <div><strong>Importante:</strong> La Secihti puede verificar el uso de herramientas de IA para redactar la propuesta. El contenido científico debe ser genuino y de autoría propia del investigador.</div>
+    </div>
+
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
+      <a href="https://paris13.moveonfr.com/locallogin/698d94aefbf4a0f36a0b9285/fra" target="_blank" class="link-btn">🇫🇷 Plataforma MoveOn (Francia)</a>
+      <a href="https://secihti.mx/convocatorias/" target="_blank" class="link-btn outline">🇲🇽 SALSA Proyectos (México)</a>
+    </div>
+  </div>
+
+  <!-- AGENDAS -->
+  <div id="tab-agendas" class="section">
+    <h2 class="section-title">¿Tu investigación aplica?</h2>
+    <p class="section-desc">Selecciona la agenda prioritaria que mejor corresponde a tu línea de investigación para ver cómo posicionar tu propuesta y a qué instituciones francesas acudir.</p>
+
+    <div class="agenda-grid">
+      <div class="agenda-card" onclick="selectAgenda(this, 1)">
+        <span class="agenda-emoji">🏥</span>
+        <div class="agenda-num">Agenda 1</div>
+        <div class="agenda-title">Salud y acciones contra enfermedades emergentes: prevención, diagnóstico y tratamiento</div>
+      </div>
+      <div class="agenda-card" onclick="selectAgenda(this, 2)">
+        <span class="agenda-emoji">🌾</span>
+        <div class="agenda-num">Agenda 2</div>
+        <div class="agenda-title">Soberanía alimentaria, producción agroecológica, alimentos nutritivos y de calidad</div>
+      </div>
+      <div class="agenda-card" onclick="selectAgenda(this, 3)">
+        <span class="agenda-emoji">🌿</span>
+        <div class="agenda-num">Agenda 3</div>
+        <div class="agenda-title">Preservación del ambiente, agua, biodiversidad, agentes tóxicos y restauración de ecosistemas</div>
+      </div>
+      <div class="agenda-card" onclick="selectAgenda(this, 4)">
+        <span class="agenda-emoji">⚡</span>
+        <div class="agenda-num">Agenda 4</div>
+        <div class="agenda-title">Energía, cambio climático, transición energética y energías renovables</div>
+      </div>
+      <div class="agenda-card" onclick="selectAgenda(this, 5)">
+        <span class="agenda-emoji">🌊</span>
+        <div class="agenda-num">Agenda 5</div>
+        <div class="agenda-title">Riesgos sísmicos, ecosistemas marinos y costeros, oceanografía, ciencias de la tierra y del universo</div>
+      </div>
+      <div class="agenda-card" onclick="selectAgenda(this, 6)">
+        <span class="agenda-emoji">🤖</span>
+        <div class="agenda-num">Agenda 6</div>
+        <div class="agenda-title">Modelización, TIC, inteligencia artificial, big data y nanotecnologías</div>
+      </div>
+      <div class="agenda-card" onclick="selectAgenda(this, 7)">
+        <span class="agenda-emoji">🏙️</span>
+        <div class="agenda-num">Agenda 7</div>
+        <div class="agenda-title">Gobernabilidad, violencias, desigualdades, viviendas, ciudades sostenibles y educación</div>
+      </div>
+      <div class="agenda-card" onclick="selectAgenda(this, 8)">
+        <span class="agenda-emoji">🎭</span>
+        <div class="agenda-num">Agenda 8</div>
+        <div class="agenda-title">Cultura, memoria colectiva, patrimonio, migraciones, diversidad, derecho y justicia social</div>
+      </div>
+    </div>
+
+    <div class="selection-result" id="agendaResult">
+      <h3 id="agendaResultTitle"></h3>
+      <p id="agendaResultText"></p>
+    </div>
+
+    <div class="divider"></div>
+    <div class="alert alert-info">
+      <span>💡</span>
+      <div><strong>Criterios que dan ventaja en la evaluación:</strong> Equipos multidisciplinarios, nuevas colaboraciones temáticas e institucionales, y participación de investigadores en proceso de consolidación.</div>
+    </div>
+  </div>
+
+  <!-- COLABORADOR -->
+  <div id="tab-colaborador" class="section">
+    <h2 class="section-title">Cómo encontrar un colaborador en Francia</h2>
+    <p class="section-desc">Un socio francés activo es condición indispensable. Aquí tienes estrategias concretas para identificarlo y contactarlo antes del cierre.</p>
+
+    <div class="tips-grid">
+      <div class="tip-card">
+        <h4>📚 Proyectos históricos ECOS Nord</h4>
+        <p>Consulta la lista completa de proyectos México–Francia desde 1994. Identifica grupos que ya trabajaron temas similares al tuyo.<br><br>
+        <a href="https://www.univ-spn.fr/wp-content/uploads/LISTE-COMPLETE-DES-PROJETS-ECOS-AVEC-LE-MEXIQUE-DEPUIS-1994.pdf" target="_blank">→ Ver lista de proyectos históricos</a></p>
+      </div>
+      <div class="tip-card">
+        <h4>🔬 HAL / ResearchGate</h4>
+        <p>Busca publicaciones científicas francesas en tu área usando <a href="https://hal.science" target="_blank">hal.science</a> o <a href="https://www.researchgate.net" target="_blank">ResearchGate</a>. Contacta directamente a los autores de artículos relevantes.</p>
+      </div>
+      <div class="tip-card">
+        <h4>🏛️ Directorio CNRS</h4>
+        <p>El Centre National de la Recherche Scientifique agrupa laboratorios en todas las áreas. Busca unidades que coincidan con tu agenda prioritaria en <a href="https://www.cnrs.fr" target="_blank">cnrs.fr</a>.</p>
+      </div>
+      <div class="tip-card">
+        <h4>🤝 Embajada de Francia en México</h4>
+        <p>El servicio de cooperación científica puede facilitar contactos. Escríbeles indicando tu área y la convocatoria: <a href="https://mx.ambafrance.org/" target="_blank">mx.ambafrance.org</a></p>
+      </div>
+      <div class="tip-card">
+        <h4>🎓 Redes académicas ANUIES</h4>
+        <p>Si tienes contactos en otras universidades mexicanas con vínculos en Francia, pide presentaciones. Consulta <a href="https://www.anuies.mx" target="_blank">anuies.mx</a> para instituciones participantes.</p>
+      </div>
+      <div class="tip-card">
+        <h4>📧 Contacto directo ECOS Nord</h4>
+        <p>El comité puede orientarte sobre grupos franceses interesados en colaborar con México.<br><br>
+        <a href="mailto:ecos.nord@univ-paris13.fr">ecos.nord@univ-paris13.fr</a><br>
+        +33 1 49 40 44 40</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><div class="icon">✅</div>Checklist: validar a tu colaborador francés</div>
+      <ul class="req-list">
+        <li><span class="req-icon">☑️</span><div>Adscrito a institución francesa de educación superior o centro de investigación reconocido</div></li>
+        <li><span class="req-icon">☑️</span><div>Tiene publicaciones recientes en el área temática del proyecto</div></li>
+        <li><span class="req-icon">☑️</span><div>Puede fungir como "líder extranjero" y registrarse en la plataforma MoveOn</div></li>
+        <li><span class="req-icon">☑️</span><div>Su institución puede exentar cuotas de inscripción a estudiantes doctorales visitantes</div></li>
+        <li><span class="req-icon">☑️</span><div>Hay acuerdo sobre implicación intelectual equivalente de ambas partes</div></li>
+        <li><span class="req-icon">☑️</span><div>Presentará la versión en francés o inglés del proyecto al Comité ECOS Nord vía MoveOn</div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- REQUISITOS -->
+  <div id="tab-requisitos" class="section">
+    <h2 class="section-title">Requisitos y proceso de envío</h2>
+    <p class="section-desc">Lista de verificación completa antes de enviar la solicitud a Secihti y a ECOS Nord.</p>
+
+    <div class="card">
+      <div class="card-title"><div class="icon">👤</div>Personas y roles requeridos</div>
+      <ul class="req-list">
+        <li><span class="req-icon">🇲🇽</span><div><strong>Líder mexicano / Responsable Técnico:</strong> Adscrito a la institución beneficiaria. Perfil Rizoma actualizado. Coordina y ejecuta el proyecto.</div></li>
+        <li><span class="req-icon">💼</span><div><strong>Responsable Administrativo:</strong> Persona distinta al Responsable Técnico. Gestiona recursos y elabora informes financieros. Perfil Rizoma actualizado.</div></li>
+        <li><span class="req-icon">⚖️</span><div><strong>Representante Legal:</strong> Firma la Carta de Postulación electrónicamente vía SALSA Proyectos. Perfil Rizoma actualizado.</div></li>
+        <li><span class="req-icon">🇫🇷</span><div><strong>Líder extranjero:</strong> Coordina desde la institución francesa. Registra la propuesta en MoveOn.</div></li>
+        <li><span class="req-icon">👨‍🎓</span><div><strong>Estudiantes de doctorado:</strong> Deben estar inscritos al programa académico al momento del registro de la propuesta.</div></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><div class="icon">📎</div>Documentos a anexar en SALSA Proyectos (PDF ≤ 4 MB c/u)</div>
+      <ul class="req-list">
+        <li><span class="req-icon">1️⃣</span><div><strong>Anexo 1 — Protocolo</strong> (formato disponible donde se publicó la convocatoria)</div></li>
+        <li><span class="req-icon">2️⃣</span><div><strong>Anexo 2 — Descripción de misiones y estancias</strong> para cada etapa del proyecto</div></li>
+        <li><span class="req-icon">3️⃣</span><div><strong>Anexo 3 — CVs del grupo mexicano</strong> (formato Secihti)</div></li>
+        <li><span class="req-icon">4️⃣</span><div><strong>CVs del grupo francés</strong> (formato ECOS Nord)</div></li>
+        <li><span class="req-icon">📜</span><div><strong>Carta de Postulación</strong> firmada electrónicamente por el Representante Legal</div></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><div class="icon">📐</div>Estructura de la propuesta</div>
+      <ul class="req-list">
+        <li><span class="req-icon">📌</span><div><strong>Datos generales:</strong> Título, demanda, resumen ejecutivo, área de conocimiento, objetivos general y específicos.</div></li>
+        <li><span class="req-icon">🔬</span><div><strong>Datos del proyecto:</strong> Descripción, antecedentes, justificación, metas, metodología, resultados esperados y entregables.</div></li>
+        <li><span class="req-icon">🗓️</span><div><strong>Plan de trabajo:</strong> 4 etapas anuales de 11 meses. Una etapa por ejercicio fiscal.</div></li>
+        <li><span class="req-icon">💵</span><div><strong>Desglose financiero:</strong> Por etapa y rubro, con justificación explícita y detallada de su pertinencia.</div></li>
+      </ul>
+    </div>
+
+    <div class="alert alert-danger">
+      <span>🚫</span>
+      <div><strong>Solo se financia movilidad:</strong> No se cubren equipos, reactivos, nómina, publicaciones ni ningún rubro fuera de pasajes y viáticos para misiones y estancias.</div>
+    </div>
+
+    <div class="alert alert-info">
+      <span>📬</span>
+      <div><strong>Envío simultáneo por ambas partes:</strong> La propuesta debe registrarse en SALSA Proyectos (MX) y en MoveOn (FR) en francés o inglés. Ambas versiones deben coincidir.</div>
+    </div>
+
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;">
+      <a href="https://paris13.moveonfr.com/locallogin/698d94aefbf4a0f36a0b9285/fra" target="_blank" class="link-btn">🇫🇷 Registrar en MoveOn (Francia)</a>
+      <a href="https://secihti.mx/convocatorias/" target="_blank" class="link-btn outline">🇲🇽 SALSA Proyectos (Secihti)</a>
+      <a href="https://www.univ-spn.fr/ecos-nord/" target="_blank" class="link-btn outline">ℹ️ Más info ECOS Nord</a>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  Herramienta informativa ECOS Nord 2026 · Fuente: TDR Secihti (10/04/2026) y <a href="https://www.univ-spn.fr/ecos-nord/" target="_blank">univ-spn.fr/ecos-nord</a> · Verifica siempre con la convocatoria oficial.
+</footer>
+
+<script>
+  function showTab(tab, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  const agendaTips = {
+    1: "Francia tiene gran fortaleza en epidemiología, vacunología e inmunología clínica. Busca colaboradores en el INSERM o facultades de medicina de París, Lyon y Montpellier. El Institut Pasteur es una referencia clave para enfermedades infecciosas y emergentes.",
+    2: "INRAE (Instituto Nacional de Investigación para la Agricultura, Alimentación y Medio Ambiente) es el socio natural en Francia para temas de soberanía alimentaria, agroecología y sistemas alimentarios sostenibles. Con presencia en toda Francia.",
+    3: "CNRS tiene laboratorios especializados en ecología, química ambiental y biodiversidad. BRGM es referencia para temas de agua y suelos. Considera también INERIS para agentes tóxicos y OFB para biodiversidad y ecosistemas.",
+    4: "Francia lidera en energía nuclear, solar e hidrógeno verde. El CEA (Comisión de Energía Atómica) y laboratorios de ingeniería de Grenoble o Paris-Saclay son buenos puntos de partida. ADEME para políticas de transición energética.",
+    5: "El IPGP (Institut de Physique du Globe de Paris) es referencia mundial en sismología y vulcanología. Para ecosistemas marinos y oceanografía, considera IFREMER (Institut Français de Recherche pour l'Exploitation de la Mer) con sedes en varias costas.",
+    6: "INRIA es la institución líder en IA, modelización y computación en Francia. Para big data considera universidades de Paris-Saclay y Paris-Cité. CNRS/IN2P3 para nanotecnología y física aplicada. Gran ecosistema de startups deep-tech.",
+    7: "Sciences Po y la EHESS (École des Hautes Études en Sciences Sociales) son fuertes en gobernanza, desigualdades y análisis social. CEREMA para ciudades y territorios sostenibles. IAU Île-de-France para urbanismo y planificación.",
+    8: "CNRS/laboratoires d'archéologie y el INALCO (Institut National des Langues et Civilisations Orientales) son clave para patrimonio, migraciones y diversidad cultural. EHESS también para ciencias sociales críticas y estudios de memoria."
+  };
+
+  const agendaNames = {
+    1: "Salud y enfermedades emergentes",
+    2: "Soberanía alimentaria",
+    3: "Preservación del ambiente",
+    4: "Energía y cambio climático",
+    5: "Riesgos sísmicos y ciencias de la tierra",
+    6: "TIC, IA y nanotecnologías",
+    7: "Gobernabilidad, ciudades y educación",
+    8: "Cultura, patrimonio y justicia social"
+  };
+
+  function selectAgenda(card, num) {
+    document.querySelectorAll('.agenda-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    const result = document.getElementById('agendaResult');
+    document.getElementById('agendaResultTitle').textContent = 'Agenda ' + num + ': ' + agendaNames[num];
+    document.getElementById('agendaResultText').textContent = agendaTips[num];
+    result.classList.add('visible');
+  }
+</script>
+</body>
+</html>
